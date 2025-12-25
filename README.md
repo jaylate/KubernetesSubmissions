@@ -1,2 +1,4 @@
 # KubernetesSubmissions
-Solutions for mooc.fi Devops with Kubernetes course exercises
+## Exercises
+### Chapter 2
+- [1.1.](https://github.com/jaylate/KubernetesSubmissions/tree/1.1/log_output)
