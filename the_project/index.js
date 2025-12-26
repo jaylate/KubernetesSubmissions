@@ -7,6 +7,6 @@ const server = http.createServer((req, res) => {
 });
 
 const PORT = process.env.PORT;
-server.listen(PORT, "localhost", () => {
+server.listen(PORT, () => {
   console.log(`Server started in port ${PORT}`);
 });
