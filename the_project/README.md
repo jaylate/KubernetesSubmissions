@@ -17,7 +17,7 @@ kind load docker-image todo-app
 
 3. Create the deployment
 ```
-kubectl apply -f deployment.yaml
+kubectl apply -f manifests/deployment.yaml
 ```
 
 4. Check logs
