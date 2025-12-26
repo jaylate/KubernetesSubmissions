@@ -17,10 +17,15 @@ kind load docker-image todo-app
 
 3. Create the deployment
 ```
-kubectl apply -f manifests/deployment.yaml
+kubectl apply -f manifests
 ```
 
 4. Check logs
 ```
 kubectl logs deployment/todo-app
+```
+
+4. (Optional) Port forward (WARNING: the command will keep running in the terminal to keep forwarding)
+```
+kubectl port-forward deployment/todo-app 8080:8080
 ```
