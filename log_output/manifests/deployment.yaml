@@ -16,3 +16,6 @@ spec:
       - name: log-output
         image: log-output
         imagePullPolicy: IfNotPresent
+        env:
+          - name: PORT
+            value: "3000"

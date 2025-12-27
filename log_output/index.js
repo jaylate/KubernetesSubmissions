@@ -1,6 +1,22 @@
 const crypto = require("crypto");
+const http = require("http");
+
 let uuid = crypto.randomUUID();
+let date;
 
 setInterval(() => {
-	console.log(`${new Date().toISOString()}: ${uuid}`);
+  date = new Date().toISOString();
+  console.log(`${date}: ${uuid}`);
 }, 5000);
+
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end(`${date}: ${uuid}\r\n`);
+});
+
+const PORT = process.env.PORT;
+server.listen(PORT, () => {
+  console.log(`Server started in port ${PORT}`);
+});
