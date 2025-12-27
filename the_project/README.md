@@ -25,7 +25,11 @@ kubectl apply -f manifests
 kubectl logs deployment/todo-app
 ```
 
-The app is accessible on the 30080 port of the node which should be mapped to `localhost:8082` if following the course
+5. Get Ingress IP and the app will be accessible on that IP
+```
+kubectl get ingress todo-app-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+```
 
 ## Lessons learned
-- Do not hard code `localhost` in app code as listening address (`0.0.0.0` is better, but maybe not the best for security reasons) - I spent several hours debugging my kind and service configs to only then find that the app will not accept any requests done from outside of the container because I left `localhost` in the code, even though `kubectl port-forward` worked.
+- Do not hard code `localhost` in app code as listening address (`0.0.0.0` is better, but maybe not the best for security reasons)
+  - I spent several hours debugging my kind and service configs to only then find that the app will not accept any requests done from outside of the container because I left `localhost` in the code, even though `kubectl port-forward` worked.
