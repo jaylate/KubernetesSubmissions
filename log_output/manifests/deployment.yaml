@@ -14,7 +14,8 @@ spec:
     spec:
       volumes:
         - name: shared-files
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: log-claim
       containers:
         - name: log-output
           image: log-output
@@ -22,8 +23,8 @@ spec:
           volumeMounts:
             - name: shared-files
               mountPath: /app/files
-        - name: log-output-reader
-          image: log-output-reader
+        - name: log-reader
+          image: log-reader
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT

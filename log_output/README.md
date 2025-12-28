@@ -3,7 +3,7 @@
 1. Build the images
 ```
 docker build -t log-output .
-docker build -t log-output-reader log-reader
+docker build -t log-reader log-reader
 docker build -t ping-pong ping-pong-app
 ```
 
@@ -11,13 +11,13 @@ docker build -t ping-pong ping-pong-app
 - With `k3d`
 ```
 k3d image import log-output
-k3d image import log-output-reader
+k3d image import log-reader
 k3d image import ping-pong
 ```
 - With `kind` (I use it)
 ```
 kind load docker-image log-output
-kind load docker-image log-output-reader
+kind load docker-image log-reader
 kind load docker-image ping-pong
 ```
   - NOTE: To enable Ingress in `kind` it is required to run `cloud-provider-kind` during the exercise runtime. Although port-forwarding from the node's port `80` to `localhost` didn't work, the Ingress IP was accessible.
@@ -29,7 +29,7 @@ kubectl apply -f manifests/ -f ping-pong-app/manifests/
 
 4. Check logs
 ```
-kubectl logs deployment/log-output log-output-reader
+kubectl logs deployment/log-output log-reader
 ```
 
 5. Get Ingress IP and the endpoint will be accessible on that IP (On '/' - log-output, on '/pingpong' - ping-pong-app)

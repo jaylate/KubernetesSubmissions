@@ -1,12 +1,13 @@
-const crypto = require("crypto");
+const fs = require("fs");
 const http = require("http");
 
 let counter = 0;
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
-  res.end(`pong ${counter}\r\n`);
   counter++;
+  res.end(`pong ${counter}\r\n`);
+  fs.writeFileSync("./files/ping.txt", `${counter}\r\n`);
 });
 
 const PORT = process.env.PORT;

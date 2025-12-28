@@ -4,7 +4,18 @@ const fs = require("fs");
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
-  res.end(fs.readFileSync("./files/log.txt", "utf8"));
+  let logContent = "\r\n";
+  let pingContent = "0\r\n";
+  try {
+    logContent = fs.readFileSync("./files/log.txt", "utf8");
+  } catch (err) {}
+
+  try {
+    pingContent = fs.readFileSync("./files/ping.txt", "utf8");
+  } catch (err) {}
+
+  res.end(logContent+
+	  "Ping / Pongs: "+pingContent);
 });
 
 const PORT = process.env.PORT;
