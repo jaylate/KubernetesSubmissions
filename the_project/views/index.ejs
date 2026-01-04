@@ -5,7 +5,16 @@
   </head>
   <body>
     <h1>The project App</h1>
-    <img src="<%= imagePath %>" width="400px" height="auto"/>
+    <img src="<%= imagePath %>" width="400px" height="auto" />
+    <div>
+      <input maxlength="140" />
+      <button>Create todo</button>
+    </div>
+    <ul>
+      <% todos.forEach((item) => { %>
+        <li><%= item %></li>
+      <% }); %>
+    </ul>
     <p>DevOps with Kubernetes 2025</p>
   </body>
 </html>

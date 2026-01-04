@@ -7,6 +7,8 @@ const ALLOWED_IMAGE_AGE = (process.env.ALLOWED_IMAGE_AGE || 10 * 60) * 1000;
 const IMAGE_SOURCE_URL = process.env.IMAGE_SOURCE_URL || 'https://picsum.photos/1200';
 const IMAGE_PATH = path.join(__dirname, 'images', 'image.jpg');
 
+const todoList = ["Learn JavaScript", "Learn React", "Build a project"];
+
 const app = express();
 app.set('view engine', 'ejs');
 
@@ -49,7 +51,7 @@ app.use('/images', express.static(path.dirname(IMAGE_PATH)));
 app.get('/', async (req, res) => {
   try {
     await validateImage();
-    res.render('index', { imagePath: '/images/image.jpg' });
+    res.render('index', { imagePath: '/images/image.jpg', todos: todoList });
   } catch (err) {
     next(err);
   }
