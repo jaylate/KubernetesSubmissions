@@ -1,6 +1,6 @@
 FROM node:lts-alpine
 
-COPY index.js /app/
+COPY . /app/
 WORKDIR /app
-ENV PORT=8080
+RUN npm install
 CMD ["node", "index.js"]

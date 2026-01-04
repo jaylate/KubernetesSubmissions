@@ -12,10 +12,19 @@ spec:
       labels:
         app: todo-app
     spec:
+      volumes:
+        - name: image-storage
+          persistentVolumeClaim:
+            claimName: todo-app-claim
       containers:
       - name: todo-app
         image: todo-app
         imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: image-storage
+            mountPath: /app/images
         env:
           - name: PORT
             value: "8080"
+          - name: ALLOWED_IMAGE_AGE
+            value: "600"
