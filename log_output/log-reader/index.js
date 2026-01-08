@@ -1,7 +1,8 @@
 const http = require("http");
 const fs = require("fs");
 
-const server = http.createServer((req, res) => {
+const PINGS_URL = process.env.PINGS_URL;
+const server = http.createServer(async (req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
   let logContent = "\r\n";
@@ -11,14 +12,21 @@ const server = http.createServer((req, res) => {
   } catch (err) {}
 
   try {
-    pingContent = fs.readFileSync("./files/ping.txt", "utf8");
-  } catch (err) {}
+    let pingRes = await fetch(PINGS_URL);
+    if (!pingRes.ok) {
+      throw new Error(`Ping response status: ${response.status}`);
+    }
+    pingContent = await pingRes.text();
+  } catch (err) {
+    console.log(err);
+  }
 
+  console.log(pingContent);
   res.end(logContent+
 	  "Ping / Pongs: "+pingContent);
 });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server started in port ${PORT}`);
 });

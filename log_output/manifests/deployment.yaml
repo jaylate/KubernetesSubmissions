@@ -29,6 +29,8 @@ spec:
           env:
             - name: PORT
               value: "3000"
+            - name: PINGS_URL
+              value: "http://ping-pong-svc:2345/pings"
           volumeMounts:
             - name: shared-files
               mountPath: /app/files

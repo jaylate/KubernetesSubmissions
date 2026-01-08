@@ -1,16 +1,27 @@
-const fs = require("fs");
-const http = require("http");
+const fs = require('fs');
+const express = require('express');
 
 let counter = 0;
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  counter++;
-  res.end(`pong ${counter}\r\n`);
-  fs.writeFileSync("./files/ping.txt", `${counter}\r\n`);
+let app = express();
+
+app.get('/pings', (req, res) => {
+  try {
+    res.end(`${counter}\r\n`);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/pingpong', (req, res) => {
+  try {
+    counter++;
+    res.end(`pong ${counter}\r\n`);
+  } catch (err) {
+    next(err);
+  }
 });
 
 const PORT = process.env.PORT;
-server.listen(PORT, () => {
-  console.log(`Server started in port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
 });
