@@ -14,7 +14,7 @@ const server = http.createServer(async (req, res) => {
   try {
     let pingRes = await fetch(PINGS_URL);
     if (!pingRes.ok) {
-      throw new Error(`Ping response status: ${response.status}`);
+      throw new Error(`Ping response status: ${pingRes.status}`);
     }
     pingContent = await pingRes.text();
   } catch (err) {

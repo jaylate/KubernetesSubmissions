@@ -28,3 +28,5 @@ spec:
             value: "8080"
           - name: ALLOWED_IMAGE_AGE
             value: "600"
+          - name: BACKEND_URL
+            value: "http://todo-backend-svc:8080/todos"

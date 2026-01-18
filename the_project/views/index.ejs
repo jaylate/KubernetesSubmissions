@@ -6,10 +6,10 @@
   <body>
     <h1>The project App</h1>
     <img src="<%= imagePath %>" width="400px" height="auto" />
-    <div>
-      <input maxlength="140" />
+    <form action="<%= backendURL %>" method="POST">
+      <input name="todoText" maxlength="140" />
       <button>Create todo</button>
-    </div>
+    </form>
     <ul>
       <% todos.forEach((item) => { %>
         <li><%= item %></li>

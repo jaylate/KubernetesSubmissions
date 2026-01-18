@@ -5,9 +5,8 @@ const path = require('path');
 const PORT = process.env.PORT || 3000;
 const ALLOWED_IMAGE_AGE = (process.env.ALLOWED_IMAGE_AGE || 10 * 60) * 1000;
 const IMAGE_SOURCE_URL = process.env.IMAGE_SOURCE_URL || 'https://picsum.photos/1200';
+const BACKEND_URL = process.env.BACKEND_URL;
 const IMAGE_PATH = path.join(__dirname, 'images', 'image.jpg');
-
-const todoList = ["Learn JavaScript", "Learn React", "Build a project"];
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -47,11 +46,25 @@ const validateImage = () => {
     });
 };
 
+const fetchTodos = async () => {
+  try {
+    let todoRes = await fetch(BACKEND_URL);
+    if (!todoRes.ok) {
+      throw new Error(`Backend response status: ${todoRes.status}`);
+    }
+    return await todoRes.json();
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
 app.use('/images', express.static(path.dirname(IMAGE_PATH)));
 app.get('/', async (req, res) => {
   try {
     await validateImage();
-    res.render('index', { imagePath: '/images/image.jpg', todos: todoList });
+    let todoList = await fetchTodos();
+    res.render('index', { imagePath: '/images/image.jpg', todos: todoList, backendURL: '/todos' });
   } catch (err) {
     next(err);
   }
