@@ -23,12 +23,12 @@ kubectl apply -f manifests -f todo-backend/manifests
 
 4. Check logs
 ```
-kubectl logs deployment/todo-app
+kubectl logs -n project deployment/todo-app
 ```
 
 5. Get Ingress IP and the app will be accessible on that IP
 ```
-kubectl get ingress todo-app-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+kubectl get -n project ingress todo-app-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
 ```
 
 ## Lessons learned
