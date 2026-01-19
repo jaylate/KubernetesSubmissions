@@ -3,21 +3,22 @@
 1. Build an image 
 ```
 docker build -t todo-app .
+docker build -t todo-backend todo-backend
 ```
 
 2. Import the image 
 - With `k3d`
 ```
-k3d image import todo-app
+k3d image import todo-app todo-backend
 ```
 - With `kind` (I use it)
 ```
-kind load docker-image todo-app
+kind load docker-image todo-app todo-backend
 ```
 
 3. Create the deployment
 ```
-kubectl apply -f manifests
+kubectl apply -f manifests -f todo-backend/manifests
 ```
 
 4. Check logs

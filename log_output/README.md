@@ -29,10 +29,10 @@ kubectl apply -f manifests/ -f ping-pong-app/manifests/
 
 4. Check logs
 ```
-kubectl logs deployment/log-output log-reader
+kubectl logs -n exercises deployment/log-output log-reader
 ```
 
 5. Get Ingress IP and the endpoint will be accessible on that IP (On '/' - log-output, on '/pingpong' - ping-pong-app)
 ```
-kubectl get ingress log-output-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+kubectl get -n exercises ingress log-output-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
 ```
