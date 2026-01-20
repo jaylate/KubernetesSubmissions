@@ -17,6 +17,12 @@ spec:
         - name: shared-files
           persistentVolumeClaim:
             claimName: log-claim
+        - name: config
+          configMap:
+            name: log-output-conf
+            items:
+              - key: "information.txt"
+                path: "information.txt"
       containers:
         - name: log-output
           image: log-output
@@ -32,6 +38,14 @@ spec:
               value: "3000"
             - name: PINGS_URL
               value: "http://ping-pong-svc:2345/pings"
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: log-output-conf
+                  key: message
           volumeMounts:
             - name: shared-files
               mountPath: /app/files
+            - name: config
+              mountPath: /app/config
+              readOnly: true
