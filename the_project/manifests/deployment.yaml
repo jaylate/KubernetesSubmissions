@@ -26,7 +26,10 @@ spec:
             mountPath: /app/images
         env:
           - name: PORT
-            value: "8080"
+            valueFrom:
+              configMapKeyRef:
+                name: todo-app-conf
+                key: default-port
           - name: ALLOWED_IMAGE_AGE
             value: "600"
           - name: BACKEND_URL
