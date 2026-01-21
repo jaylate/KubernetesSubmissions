@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: exercises
+  name: postgres
+spec:
+  serviceName: postgres-svc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ping-pong
+  template:
+    metadata:
+      labels:
+        app: ping-pong
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          ports:
+            - name: psql
+              containerPort: 5432
+          volumeMounts:
+            - name: psql-storage
+              mountPath: /var/lib/postgresql
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ping-pong-secrets
+                  key: POSTGRES_PASSWORD
+  volumeClaimTemplates:
+    - metadata:
+        name: psql-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: standard # Kind doesn't seem to support local-path by default
+        resources:
+          requests:
+            storage: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: exercises
+  name: postgres-svc
+  labels:
+    app: postgres
+spec:
+  ports:
+    - name: psql
+      port: 5432
+  clusterIP: None
+  selector:
+    app: ping-pong

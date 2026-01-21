@@ -22,10 +22,11 @@ kind load docker-image ping-pong
 ```
   - NOTE: To enable Ingress in `kind` it is required to run `cloud-provider-kind` during the exercise runtime. Although port-forwarding from the node's port `80` to `localhost` didn't work, the Ingress IP was accessible.
 
-3. Create the deployment
+3. Create the deployments and stateful set for database
 ```
 kubectl apply -f manifests/ -f ping-pong-app/manifests/
 ```
+  - NOTE: Applying encrypted secrets file will fail, to do it execute `sops --decrypt manifests/secret.enc.yaml | kubectl apply -f -`
 
 4. Check logs
 ```
