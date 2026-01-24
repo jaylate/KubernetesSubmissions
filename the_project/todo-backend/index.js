@@ -38,8 +38,12 @@ const server = http.createServer(async (req, res) => {
     });
     req.on('end', async () => {
       const text = new URLSearchParams(body).get('todoText');
-      await pool.query("INSERT INTO todos (text) VALUES ($1)",
-        [text]);
+      if (text.length > 140) {
+	console.log(`Rejected todo: ${text}`);
+      } else {
+	console.log(`Accepted todo: ${text}`);
+	await pool.query("INSERT INTO todos (text) VALUES ($1)", [text]);
+      }
 
       res.writeHead(302, {
 	'Location': '/' // Redirect back to root
