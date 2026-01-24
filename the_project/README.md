@@ -4,16 +4,17 @@
 ```
 docker build -t todo-app .
 docker build -t todo-backend todo-backend
+docker build -t todo-job todo-job
 ```
 
 2. Import the image 
 - With `k3d`
 ```
-k3d image import todo-app todo-backend
+k3d image import todo-app todo-backend todo-job
 ```
 - With `kind` (I use it)
 ```
-kind load docker-image todo-app todo-backend
+kind load docker-image todo-app todo-backend todo-job
 ```
 
 3. Create the deployment and stateful set for database

@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: todo-job
+spec:
+  schedule: "@hourly"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: todo-job
+              image: todo-job
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: URL
+                  value: "https://en.wikipedia.org/wiki/Special:Random"
+                - name: DB_HOST
+                  value: "postgres-svc"
+                - name: DB_PORT
+                  value: "5432"
+                - name: DB_USER
+                  value: "postgres"
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: todo-backend-secrets
+                      key: POSTGRES_PASSWORD
+                - name: DB_DATABASE
+                  value: "postgres"
+          restartPolicy: Never
