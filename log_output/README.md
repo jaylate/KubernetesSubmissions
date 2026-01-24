@@ -26,7 +26,7 @@ kind load docker-image ping-pong
 ```
 kubectl apply -f manifests/ -f ping-pong-app/manifests/
 ```
-  - NOTE: Applying encrypted secrets file will fail, to do it execute `sops --decrypt manifests/secret.enc.yaml | kubectl apply -f -`
+  - NOTE: Applying encrypted secrets file will fail, to do it execute `sops --decrypt ping-pong-app/manifests/secret.enc.yaml | kubectl apply -f -`
 
 4. Check logs
 ```

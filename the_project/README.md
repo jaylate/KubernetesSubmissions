@@ -16,10 +16,11 @@ k3d image import todo-app todo-backend
 kind load docker-image todo-app todo-backend
 ```
 
-3. Create the deployment
+3. Create the deployment and stateful set for database
 ```
 kubectl apply -f manifests -f todo-backend/manifests
 ```
+  - NOTE: Applying encrypted secrets file will fail, to do it execute `sops --decrypt todo-backend/manifests/secret.enc.yaml | kubectl apply -f -`
 
 4. Check logs
 ```

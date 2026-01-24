@@ -23,4 +23,16 @@ spec:
                 configMapKeyRef:
                   name: todo-app-conf
                   key: default-port
-
+            - name: DB_HOST
+              value: "postgres-svc"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: "postgres"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: todo-backend-secrets
+                  key: POSTGRES_PASSWORD
+            - name: DB_DATABASE
+              value: "postgres"
