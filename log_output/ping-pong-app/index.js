@@ -42,7 +42,7 @@ app.get('/pings', async (req, res) => {
   }
 });
 
-app.get('/pingpong', async (req, res) => {
+app.get('/', async (req, res) => {
   try {
     const result = await pool.query(`
       UPDATE pings SET counter = counter + 1
@@ -55,10 +55,6 @@ app.get('/pingpong', async (req, res) => {
   } catch (err) {
     next(err);
   }
-});
-
-app.get('/', (req, res) => {
-  res.sendStatus(200);
 });
 
 const PORT = process.env.PORT;
