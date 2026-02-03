@@ -33,9 +33,17 @@ spec:
         - name: log-reader
           image: log-reader
           imagePullPolicy: IfNotPresent
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            httpGet:
+              path: /healthz
+              port: 3000
           env:
             - name: PORT
               value: "3000"
+            - name: PINGS_HEALTH_URL
+              value: "http://ping-pong-svc:2345/healthz"
             - name: PINGS_URL
               value: "http://ping-pong-svc:2345/pings"
             - name: MESSAGE

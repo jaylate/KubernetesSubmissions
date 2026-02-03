@@ -13,20 +13,35 @@ const pool = new Pool({
 });
 
 const initTable = async () => {
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS pings (
-      id INTEGER PRIMARY KEY DEFAULT 1,
-      counter INTEGER DEFAULT 0
-    )
-  `);
-  await pool.query(`
-    INSERT INTO pings (counter)
-    VALUES (0)
-    ON CONFLICT (id) DO NOTHING
-  `);
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS pings (
+        id INTEGER PRIMARY KEY DEFAULT 1,
+        counter INTEGER DEFAULT 0
+      )
+    `);
+    await pool.query(`
+      INSERT INTO pings (counter)
+      VALUES (0)
+      ON CONFLICT (id) DO NOTHING
+    `);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 initTable();
+
+app.get('/healthz', async (req, res) => {
+  try {
+    const client = await pool.connect();
+    client.release();
+    return res.status(200).send('OK');
+  } catch (err) {
+    console.error('Pool is not ready:', err);
+    return res.status(503).send('Service Unavailable');
+  }
+});
 
 app.get('/pings', async (req, res) => {
   try {
@@ -38,7 +53,8 @@ app.get('/pings', async (req, res) => {
       : 0;
     res.end(`${counter}\r\n`);
   } catch (err) {
-    next(err);
+    console.error(err);
+    return res.status(503).send('Service Unavailable');
   }
 });
 
@@ -53,7 +69,8 @@ app.get('/', async (req, res) => {
       : 0;
     res.end(`pong ${counter}\r\n`);
   } catch (err) {
-    next(err);
+    console.error(err);
+    return res.status(503).send('Service Unavailable');
   }
 });
 

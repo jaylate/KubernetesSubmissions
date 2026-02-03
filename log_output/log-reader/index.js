@@ -1,21 +1,38 @@
-const http = require("http");
-const fs = require("fs");
+const fs = require('fs');
+const express = require('express');
 
+const app = express();
+
+const PINGS_HEALTH_URL = process.env.PINGS_HEALTH_URL;
 const PINGS_URL = process.env.PINGS_URL;
-const server = http.createServer(async (req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  let fileContent = "\r\n";
-  let envVarContent = process.env.MESSAGE + "\r\n";
-  let logContent = "\r\n";
-  let pingContent = "0\r\n";
+
+app.get('/healthz', async (req, res) => {
   try {
-    fileContent = fs.readFileSync("./config/information.txt", "utf8");
+    const response = await fetch(PINGS_HEALTH_URL);
+
+    if (response.ok) {
+      return res.status(200).send('OK');
+    } else {
+      return res.status(503).send('Service Unavailable');
+    }
+  } catch (err) {
+    console.log('Error fetching ping health URL: ', err);
+    return res.status(503).send('Service Unavailable');
+  }
+});
+
+app.get('/', async (req, res) => {
+  let fileContent = '\r\n';
+  let envVarContent = process.env.MESSAGE + '\r\n';
+  let logContent = '\r\n';
+  let pingContent = '0\r\n';
+  try {
+    fileContent = fs.readFileSync('./config/information.txt', 'utf8');
   } catch (err) {
     console.log(err);
   }
   try {
-    logContent = fs.readFileSync("./files/log.txt", "utf8");
+    logContent = fs.readFileSync('./files/log.txt', 'utf8');
   } catch (err) {
     console.log(err);
   }
@@ -31,13 +48,13 @@ const server = http.createServer(async (req, res) => {
   }
 
   res.end(
-	  "file content: " + fileContent +
-	  "env variable: MESSAGE=" + envVarContent +
+	  'file content: ' + fileContent +
+	  'env variable: MESSAGE=' + envVarContent +
 	  logContent +
-	  "Ping / Pongs: " + pingContent);
+	  'Ping / Pongs: ' + pingContent);
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server started in port ${PORT}`);
 });

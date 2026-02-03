@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - manifests/namespace.yaml
+  - manifests/configmap.yaml
+  - manifests/persistentvolumeclaim.yaml
+  - manifests/gateway.yaml
+  - manifests/deployment.yaml
+  - manifests/service.yaml
+  - ping-pong-app/manifests/secret.yaml
+  - ping-pong-app/manifests/postgres.yaml
+  - ping-pong-app/manifests/deployment.yaml
+  - ping-pong-app/manifests/service.yaml
+  - manifests/route.yaml
