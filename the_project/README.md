@@ -36,3 +36,4 @@ kubectl get -n project ingress todo-app-ingress -o jsonpath='{.status.loadBalanc
 ## Lessons learned
 - Do not hard code `localhost` in app code as listening address (`0.0.0.0` is better, but maybe not the best for security reasons)
   - I spent several hours debugging my kind and service configs to only then find that the app will not accept any requests done from outside of the container because I left `localhost` in the code, even though `kubectl port-forward` worked.
+- `kubectl top pods` doesn't work without Metrics API, to set it up with Helm I used command from [here](https://gist.github.com/sanketsudake/a089e691286bf2189bfedf295222bd43?permalink_comment_id=4458547#gistcomment-4458547)

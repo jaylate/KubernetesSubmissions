@@ -21,6 +21,13 @@ spec:
       - name: todo-app
         image: todo-app
         imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: "20m"
+            memory: "50Mi"
+          limits:
+            cpu: "200m"
+            memory: "100Mi"
         volumeMounts:
           - name: image-storage
             mountPath: /app/images
