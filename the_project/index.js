@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 3000;
 const ALLOWED_IMAGE_AGE = (process.env.ALLOWED_IMAGE_AGE || 10 * 60) * 1000;
 const IMAGE_SOURCE_URL = process.env.IMAGE_SOURCE_URL || 'https://picsum.photos/1200';
 const BACKEND_URL = process.env.BACKEND_URL;
+const BACKEND_HEALTH_URL = process.env.BACKEND_HEALTH_URL;
 const IMAGE_PATH = path.join(__dirname, 'images', 'image.jpg');
 
 const app = express();
@@ -59,14 +60,31 @@ const fetchTodos = async () => {
   }
 };
 
+app.get('/healthz', async (req, res) => {
+  try {
+    const response = await fetch(BACKEND_HEALTH_URL);
+
+    if (response.ok) {
+      return res.status(200).send('OK');
+    } else {
+      return res.status(503).send('Service Unavailable');
+    }
+  } catch (err) {
+    console.log('Error fetching backend health URL: ', err);
+    return res.status(503).send('Service Unavailable');
+  }
+});
+
 app.use('/images', express.static(path.dirname(IMAGE_PATH)));
+
 app.get('/', async (req, res) => {
   try {
     await validateImage();
     let todoList = await fetchTodos();
     res.render('index', { imagePath: '/images/image.jpg', todos: todoList, backendURL: '/todos' });
   } catch (err) {
-    next(err);
+    console.error(err);
+    return res.status(503).send('Service Unavailable');
   }
 });
 

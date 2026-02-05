@@ -28,6 +28,18 @@ spec:
           limits:
             cpu: "200m"
             memory: "100Mi"
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          httpGet:
+             path: /healthz
+             port: 8080
+        livenessProbe:
+          initialDelaySeconds: 20
+          periodSeconds: 5
+          httpGet:
+             path: /healthz
+             port: 8080
         volumeMounts:
           - name: image-storage
             mountPath: /app/images
@@ -41,3 +53,5 @@ spec:
             value: "600"
           - name: BACKEND_URL
             value: "http://todo-backend-svc:8080/todos"
+          - name: BACKEND_HEALTH_URL
+            value: "http://todo-backend-svc:8080/healthz"

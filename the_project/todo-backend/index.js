@@ -1,5 +1,8 @@
-const http = require('http');
+const express = require('express');
 const { Pool } = require('pg');
+
+const app = express();
+app.use(express.urlencoded({ extended: true }));
 
 const pool = new Pool({
   host: process.env.DB_HOST,
@@ -10,50 +13,62 @@ const pool = new Pool({
 });
 
 const initTable = async () => {
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS todos (
-      id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-      text TEXT
-    )
-  `);
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS todos (
+        id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+        text TEXT
+      )
+    `);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 initTable();
 
-const server = http.createServer(async (req, res) => {
-  if (req.method == 'GET') {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
+app.get('/healthz', async (req, res) => {
+  try {
+    const client = await pool.connect();
+    client.release();
+    return res.status(200).send('OK');
+  } catch (err) {
+    console.error('Pool is not ready:', err);
+    return res.status(503).send('Service Unavailable');
+  }
+});
 
+app.get('/todos', async (req, res) => {
+  try {
     const query = {
       text: "SELECT text FROM todos",
       rowMode: 'array',
     };
     const queryRes = await pool.query(query);
-    res.end(JSON.stringify(queryRes.rows ?? []));
-  } else if (req.method == 'POST') {
-    let body = '';
-    req.on('data', (chunk) => {
-      body += chunk.toString();
-    });
-    req.on('end', async () => {
-      const text = new URLSearchParams(body).get('todoText');
-      if (text.length > 140) {
-	console.log(`Rejected todo: ${text}`);
-      } else {
-	console.log(`Accepted todo: ${text}`);
-	await pool.query("INSERT INTO todos (text) VALUES ($1)", [text]);
-      }
+    res.json(queryRes.rows ?? []);
+  } catch (err) {
+    console.error(err);
+    return res.status(503).send('Service Unavailable');
+  }
+});
 
-      res.writeHead(302, {
-	'Location': '/' // Redirect back to root
-      });
-      res.end();
-    });
+app.post('/todos', async (req, res) => {
+  try {
+    const text = req.body.todoText;
+    if (text.length > 140) {
+      console.log(`Rejected todo: ${text}`);
+    } else {
+      console.log(`Accepted todo: ${text}`);
+      await pool.query("INSERT INTO todos (text) VALUES ($1)", [text]);
+    }
+    res.redirect('/');
+  } catch (err) {
+    console.error(err);
+    return res.status(503).send('Service Unavailable');
   }
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server started in port ${PORT}`);
 });
