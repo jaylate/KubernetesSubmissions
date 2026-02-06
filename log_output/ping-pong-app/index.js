@@ -58,7 +58,7 @@ app.get('/pings', async (req, res) => {
   }
 });
 
-app.get('/', async (req, res) => {
+app.get('/pingpong', async (req, res) => {
   try {
     const result = await pool.query(`
       UPDATE pings SET counter = counter + 1

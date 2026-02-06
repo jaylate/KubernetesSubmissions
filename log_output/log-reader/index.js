@@ -48,10 +48,10 @@ app.get('/', async (req, res) => {
   }
 
   res.end(
-	  'file content: ' + fileContent +
-	  'env variable: MESSAGE=' + envVarContent +
-	  logContent +
-	  'Ping / Pongs: ' + pingContent);
+	  'file content: ' + fileContent + '\r\n' +
+	  'env variable: MESSAGE=' + envVarContent + '\r\n' +
+	  logContent + '\r\n' +
+	  'Ping / Pongs: ' + pingContent + '\r\n');
 });
 
 const PORT = process.env.PORT || 3000;

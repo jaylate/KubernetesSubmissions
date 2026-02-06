@@ -9,6 +9,7 @@ resources:
   - manifests/service.yaml
   - ping-pong-app/manifests/secret.yaml
   - ping-pong-app/manifests/postgres.yaml
-  - ping-pong-app/manifests/deployment.yaml
+  - ping-pong-app/manifests/analysistemplate.yaml
+  - ping-pong-app/manifests/rollout.yaml
   - ping-pong-app/manifests/service.yaml
   - manifests/route.yaml

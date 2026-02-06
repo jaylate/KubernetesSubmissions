@@ -1,13 +1,22 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   namespace: exercises
   name: ping-pong
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: ping-pong
+  strategy:
+    canary:
+      steps:
+      - setWeight: 25
+      - pause:
+          duration: 30s
+      - setWeight: 50
+      - pause:
+          duration: 30s
   template:
     metadata:
       labels:
@@ -18,6 +27,12 @@ spec:
           image: ping-pong
           imagePullPolicy: IfNotPresent
           readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            httpGet:
+              path: /healthz
+              port: 3000
+          livenessProbe:
             initialDelaySeconds: 10
             periodSeconds: 5
             httpGet:
